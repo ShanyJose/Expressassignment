@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+   <meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dont Die Before You Watch the Below Movies</title>
+   <link href="/css/bootstrap.min.css" rel="stylesheet">
+   <link href="/css/style.css" rel="stylesheet">
+    <script src="/js/jquery-2.2.3.js"></script>
+    <script src="/js/jput.min.js"></script>
+ </head>
+ <body>
+
+ <script type = "application/javascript">
+ var obj = {};
+ var jsonRects = [];
+
+      $.ajax({
+        url: "/getJSON",
+    success: function(data) {
+      //console.log("data : "+data);
+      //obj=$.parseJSON(data);
+      jsonRects = JSON.parse(data);
+    }
+      });
+
+      console.log(jsonRects);
+		//alert(jsonRects.length);
+		//alert(jsonRects[0])
+		alert("Your page is loading . Please wait");
+		$(document).ready(function() {
+			$('#source').jPut({
+				jsonData: jsonRects,
+				//ajax_url:'/getJSON',
+				name: 'template'
+			});
+
+		});
+
+
+
+        function addMovie(movieName)
+        {
+        alert(movieName);
+        jQuery.ajax({
+        url:"addMovie?movieName="+movieName,
+        type:"get",
+        success:function (data, textStatus, jqXHR) {
+        }
+        });
+        }
+
+
+
+        function delMovie(titlename)
+        {
+        alert(titlename);
+        jQuery.ajax({
+        url:"deleteMovie?titlename="+titlename,
+        type:"delete",
+        success:function (data, textStatus, jqXHR) {
+        }
+        });
+        }
+
+        function fillDetails(imdbID) {
+			var updatedMovie;
+			//alert(imdbID);
+			for (var i = jsonRects.length - 1; i >= 0; i--) {
+				if (jsonRects[i].title == title) {
+					updatedMovie = jsonRects[i];
+				}
+			}
+			$("#mvtitle").val(updatedMovie.title);
+			$("#mvyear").val(updatedMovie.year);
+			$("#mvactor").val(updatedMovie.actors);
+			$("#mvdirector").val(updatedMovie.director);
+			$("#mvplot").val(updatedMovie.plot);
+
+		}
+    </script>
+
+<center>   <div class="container-fluid" id="source" >
+    <div class="row">
+<div>
+  <div>
+    <h2><i>Movies To watch before I die</h2></i>
+    <br>
+    <br>
+  </div>
+    <div class="col-md-12" >
+        <div>
+
+    <div class="row" jput="template" >
+        <div class="col-md-4" id="posterdiv" style="clear:both">
+            <img alt="Movie Image Preview" src="" id="MovieImage">
+        </div>
+        <div class="col-md-4">
+
+            <h2 id="movieTitle">
+                Title:{{title}}
+            </h5>
+            </h2>
+            <h5 id="year">
+                Year:{{year}}
+            </h5>
+            <h5 id="actors">
+                Actor:{{actors}}
+            </h5>
+            <h5 id="director">
+                Director:{{director}}
+            </h5>
+            <p id="plot">
+                Plot:{{plot}}
+            </p>
+        </div>
+        <div class="col-md-2">
+          <form name="delete" action="">
+          <button type="button" class="btn btn-default" name={{title}} onclick="delMovie(this.name)">Delete Movie from list </button>
+        </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-default" onclick="">update </button>
+        </div>
+        </div>
+        </div>
+</div>
+<div class="row">
+        <div class="col-md-6">
+            <form role="form" action="/crud/addMovie" method="GET" id="searchForm">
+                <div class="form-group">
+
+                  <input type="title" class="form-control" name="Title" id="titleValue">
+						</div>
+						<button type="submit" class="btn btn-success"> Search and Add Title </button>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="modal" id="myModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button class="close" data-dismiss="modal" aria-hidden="true">Close</button>
+						<h4 class="modal-title">Edit Movie Details</h4>
+					</div>
+					<!-- end modal-header -->
+					<div class="modal-body">
+						<form id="updateMovie" action="/crud/updateMovie" method="GET">
+							<label>Title</label>
+							<input type="text" id="mvtitle" name="mvTitle" readonly="readonly" />
+							<br />
+							<label>Year</label>
+							<input type="text" id="mvyear" name="Year" required="required" />
+							<br />
+							<label>Actor</label>
+							<input type="text" id="mvactor" name="Actor" required="required" />
+							<br />
+							<label>Director</label>
+							<input type="text" id="mvdirector" name="Director" required="required" />
+							<br />
+							<label>Plot</label>
+							<input type="text" id="mvplot" name="Plot" required="required" />
+
+							<button class="btn btn-success" id="submit"> Submit</button>
+							<button class="btn btn-inverse"> Cancel</button>
+						</form>
+					</div>
+					<!-- end modal-body -->
+				</div>
+				<!-- end modal-content -->
+			</div>
+			<!-- end modal-dialog -->
+		</div>
+		<!-- end myModal -->
+
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/scripts.js"></script>
+
+</body>
+
+</html>
